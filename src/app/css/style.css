@@ -1,0 +1,142 @@
+/**
+* Code support from http://thecodeplayer.com/walkthrough/javascript-css3-calculator
+*/
+
+/* Initial Reset */
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-weight: bold;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+}
+
+/* The background gradient */
+html{
+    height: 100%;
+    background: white;
+    background: radial-gradient(circle, #fff 20%, #ccc);
+    background-size: cover;
+}
+
+/* 3D shadow effect */
+.wrapper{
+    width: 325px;
+    height: auto;
+
+    margin: 100px auto;
+    padding: 20px 20px 9px;
+
+    background: #9dd2ea;
+    background: linear-gradient(#9dd2ea, #8bceec);
+    border-radius: 3px;
+    box-shadow: 0px 4px #009de4, 0px 10px 15px rgba(0, 0, 0, 0.2);
+}
+
+
+/* Screen float */
+.screen{
+    height: 40px;
+    width: 280px;
+    margin: 0 auto;
+
+    padding: 0 10px;
+
+    background: rgba(0, 0, 0, 0.2);
+
+    /*Typography*/
+    font-size: 17px;
+    line-height: 40px;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    text-align: right;
+    letter-spacing: 1px;
+}
+
+/* Shadow and border design screen top */
+.screen#query{
+    box-shadow: inset 0px 4px rgba(0, 0, 0, 0.2);
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+/* Border design screen bottom */
+.screen#result{
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+/* Operator keys color */
+.btn.opr{
+    background: #fff0f5;
+}
+
+/* Equals key color */
+.btn.res{
+    background: #f1ff92;
+}
+
+/* Clear screen color and shadow */
+.btn.clr{
+    background: #ff9fa8;
+    box-shadow: 0px 4px #ff7c87;
+}
+
+/* Clear floats */
+.buttons-wrapper{
+    overflow: hidden;
+    padding-top: 5px;
+}
+
+/** Design buttons (keys) **/
+.btn {
+    float: left;
+    position: relative;
+    top: 0;
+
+    cursor: pointer;
+
+    width: 64px;
+    height: 36px;
+
+    background: white;
+    border-radius: 3px;
+    box-shadow: 0px 4px rgba(0, 0, 0, 0.2);
+
+    margin: 3px 3px 6px 4px;
+
+    color: #888;
+    line-height: 36px;
+    text-align: center;
+
+    /* prevent selection of text inside keys */
+    user-select: none;
+
+    /* smoothing out hover and active states using css3 transitions */
+    transition: all 0.2s ease;
+}
+
+/* Buttons on hover change color*/
+.btn.num:hover{
+    background: #f2f2f2;
+}
+
+.btn.res:hover{
+    background: #ebff66;
+}
+
+.btn.opr:hover{
+    background: #ffccdd;
+}
+
+.btn.clr:hover{
+    background: #f6c6d0;
+}
+
+/* On button click remove shadow to resemble real*/
+.btn:active{
+    box-shadow: 0px 0px #ffffff;
+    top:2px;
+}
+
