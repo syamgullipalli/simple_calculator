@@ -1,0 +1,12 @@
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+
+# npm specific
+/node_modules/
+
+# project specific
+/dist/
+/tests/reports/

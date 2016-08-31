@@ -1,0 +1,25 @@
+{
+  "name": "simple_calculator",
+  "version": "1.0.0",
+  "description": "A simple calculator using HTML, CSS and JavaScript.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node_modules/.bin/intern-client config=tests/intern"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/syamgullipalli/simple_calculator.git"
+  },
+  "keywords": [
+    "intern"
+  ],
+  "author": "Syam Gullipalli <mail2ajaysimha@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/syamgullipalli/simple_calculator/issues"
+  },
+  "homepage": "https://github.com/syamgullipalli/simple_calculator#readme",
+  "devDependencies": {
+    "intern": "^3.3.1"
+  }
+}
