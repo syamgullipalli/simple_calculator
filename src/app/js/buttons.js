@@ -1,3 +1,21 @@
-//TODO On click number and operator: display on query screen
-//TODO On click clear: clear the the query and result
-//TODO If result screen is not cleared (not 0) and clicked on operator: precede the query screen with result
+/**
+ * Button click functionality.
+ * Publish the button click event "BTN_CLICKED" with the key value.
+ * Publish Subscribe pattern will take care of calling the binding functions.
+ */
+
+var buttons = (function () {
+    // Cache DOM
+    var $btn = $('.btn');
+
+    // Bind events
+    $btn.on('click', emitBtnClick);
+
+    /**
+     * Publish button click event
+     */
+    function emitBtnClick() {
+        // On click pass key value to the event with spaces trimmed
+        events.emit('BTN_CLICKED', $(this).text().trim());
+    }
+})();
