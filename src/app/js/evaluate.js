@@ -1,8 +1,5 @@
 //TODO Suppress the result to 22 characters if longer than 22 characters
 //TODO Only one dot allowed per on result screen
-//TODO Only one dot allowed per number (One dot allowed in between two operators)
-//TODO Two operators can't fit consecutively
-//TODO Parse the query string and modify if required
 //TODO Divided by zero: exception
 //TODO If result screen is not cleared (not 0) and clicked on operator: precede the query screen with result
 
@@ -10,7 +7,6 @@
 var evaluate = (function () {
     // Cache DOM
     var $query = $('#query');
-    var $result = $('#result');
     var MAX_CHARS = 22; //FIXME avoid hard-code
 
     // Bind events
@@ -43,13 +39,13 @@ var evaluate = (function () {
             case '%':
             case '(':
                 if(isQueryLengthValid(query) && isFirstOperatorValid(query, key)
-                    && isConsecutiveOperatorAllowed(query, key))
+                    && isConsecutiveOperatorValid(query, key))
                     events.emit('VALID_QUERY', query.concat(key));
                 break;
 
             // Decimal
             case '.':
-                if(isQueryLengthValid(query))
+                if(isQueryLengthValid(query) && isConsecutiveOperatorValid(query, key) && isDecimalValid(query))
                     events.emit('VALID_QUERY', query.concat(key));
                 break;
 
@@ -81,20 +77,59 @@ var evaluate = (function () {
             }
         }
 
-    if (opened_brace_count > closed_brace_count)
-        return true;
-    return false;
+        if (opened_brace_count > closed_brace_count)
+            return true;
+        return false;
     }
 
-    function isConsecutiveOperatorAllowed(query, key) {
-        var last_char = query.slice(-1)
+    /**
+     * Check the validity of the consecutive operators.
+     * @param query
+     * @param key
+     * @returns {boolean}
+     */
+    function isConsecutiveOperatorValid(query, key) {
+        var last_char = query.slice(-1) // Extract last character
+
+        if(!isAnOperator(last_char))
+            return true;
+
+        switch (key){
+            case '+':   // only after ')' or '.' accepted
+            case '*':
+            case '/':
+            case '%':
+            case ')':
+                if(last_char == ')' || last_char == '.')
+                    return true;
+                return false;
+
+            case '-':   // after any operator except '+' and '-' are allowed
+                if(last_char == '-' || last_char == '+')
+                    return false;
+                break;
+
+            case '.':   // after any operator except '.' are allowed
+                if(last_char == '.')
+                    return false;
+                break;
+
+            case '(':   // accepted after any operator
+                break;
+        }
 
         return true;
     }
 
-    function idDecimalValid(query) {
-        // TODO
-        return true;
+    /**
+     * Is '.' valid to be appended to query string.
+     * @param query
+     * @returns {boolean}
+     */
+    function isDecimalValid(query) {
+        if(query.match(/[\+|\-|\*|\/|\%|\(]?\d*\.\d*$/) === null) // Check validity using regex
+            return true;
+        return false;
     }
 
     /**
@@ -125,8 +160,13 @@ var evaluate = (function () {
         return null;
     }
 
+    /**
+     * Check is the geven key is a valid operator.
+     * @param key
+     * @returns {boolean}
+     */
     function isAnOperator(key) {
-        if(['+', '-', '*', '/', '%', '(', ')'].indexOf(key) !=-1)
+        if(['+', '-', '*', '/', '%', '(', ')', '.'].indexOf(key) !=-1)
             return true;
         return false;
     }
@@ -164,7 +204,8 @@ var evaluate = (function () {
 
     /**
      * Add missing braces to an incomplete valid query or remove operator at the end of the query. Validate credible
-     * query with missing '*'s. e.g. 5(2)+8(6) is a valid query, will be parsed as (5*2)+(8*6).
+     * query with missing '*'s. e.g. 5(2)+8(6) is a valid query, will be evaluated as (5*2)+(8*6). Validate ').' case
+     * e.g. (8).2+(.5).4 is a valid query, will be evaluated as (8*0.2)+(0.5*0.4)
      * Note: Query should be validated only on result '='
      * @param query
      * @returns {*}
@@ -191,9 +232,8 @@ var evaluate = (function () {
      */
     function removeIfOperatorsAtEnd(query) {
         var last_char = query.slice(-1); // Extract last character
-        if(isAnOperator(last_char) || last_char == '.') { // if last character in query is operator or '.'
+        if(isAnOperator(last_char)) { // if last character in query is operator or '.'
             query = query.slice(0, -1); // remove the last character
-            console.log('Query: ' + query);
             return removeIfOperatorsAtEnd(query); // remove recursively as long as the query ends with an operator
         } else {
             return query;
