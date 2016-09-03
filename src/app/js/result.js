@@ -6,7 +6,7 @@
 /**
  * The result screen is evaluated.
  */
-var results = (function () {
+define(['jquery', 'calc/pubsub'], function ($, events) {
     // Cache DOM
     var $result = $('#result');
     var MAX_CHARS = 22; //FIXME avoid hard-code
@@ -33,8 +33,11 @@ var results = (function () {
         return result;
     }
 
-    function suppressResult(result){
-        // TODO
-        return null;
-    }
-})();
+    /* START TEST-HOOK */
+    expose = {
+        _calculate: calculate
+    };
+
+    return expose;
+    /* END TEST-HOOK */
+});

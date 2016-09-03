@@ -38,15 +38,32 @@
     </div>
 </div>
 
-<!-- Include JQuery -->
-<script type="text/javascript" src="../node_modules/jquery/dist/jquery.min.js"></script>
+<!-- dojo configuration and module declaration -->
+<script>
+    dojoConfig= {
+        async: true,
+        baseUrl: '/simple_calculator/',
+        packages: [
+            {
+                name: 'calc',
+                location: 'src/app/js/'
+            },
+            {
+                name: 'jquery',
+                location: 'node_modules/jquery/dist',
+                main: 'jquery.min'
+            }
+        ]
+    };
+</script>
 
-<!-- Include scripts defined -->
-<script type="text/javascript" src="app/js/pubsub.js"></script>
-<script type="text/javascript" src="app/js/buttons.js"></script>
-<script type="text/javascript" src="app/js/evaluate.js"></script>
-<script type="text/javascript" src="app/js/display.js"></script>
-<script type="text/javascript" src="app/js/result.js"></script>
+<!-- Load dojo core (define and require functions) -->
+<script src="../node_modules/dojo/dojo.js"></script>
+
+<!-- load modules -->
+<script>
+    require(['calc/buttons', 'calc/display', 'calc/result', 'calc/evaluate']);
+</script>
 
 </body>
 </html>

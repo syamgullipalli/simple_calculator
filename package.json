@@ -23,6 +23,7 @@
     "intern": "^3.3.1"
   },
   "dependencies": {
+    "dojo": "github:dojo/dojo",
     "jquery": "^3.1.0"
   }
 }

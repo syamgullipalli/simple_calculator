@@ -4,7 +4,7 @@
  * The publish subscribe pattern is clearly explained in modular javascript tutorial
  * https://www.youtube.com/watch?v=nQRXi1SVOow&list=PLoYCgNOIyGABs-wDaaxChu82q_xQgUb4f&index=4
  */
-var events = (function() {
+define(function() {
     var events = {}; // to store events
 
     /**
@@ -54,4 +54,4 @@ var events = (function() {
         off: off,
         emit: emit
     };
-})();
+});

@@ -3,7 +3,7 @@
  * Publish the button click event "BTN_CLICKED" with the key value.
  * Publish Subscribe pattern will take care of calling the binding functions.
  */
-var buttons = (function () {
+define(['jquery', 'calc/pubsub'], function ($, events) {
     // Cache DOM
     var $btn = $('.btn');
 
@@ -17,4 +17,12 @@ var buttons = (function () {
         // On click pass key value to the event with spaces trimmed
         events.emit('BTN_CLICKED', $(this).text().trim());
     }
-})();
+
+    /* START TEST-HOOK */
+    expose = {
+        _emitBtnClick: emitBtnClick
+    };
+
+    return expose;
+    /* END TEST-HOOK */
+});

@@ -4,7 +4,8 @@
  * Copied from: https://github.com/theintern/intern-tutorial
  */
 
-define([], function () {
+define(function () {
+
     return {
         greet: function (name) {
             name = name || 'world';

@@ -1,7 +1,7 @@
 /**
  * Display query and result on respective screens.
  */
-var display = (function () {
+define(['jquery', 'calc/pubsub'], function ($, events) {
     // Cache DOM
     var $query = $('#query');
     var $result = $('#result');
@@ -34,4 +34,14 @@ var display = (function () {
     function displayResult(result) {
         $result.text(result);
     }
-})();
+
+    /* START TEST-HOOK */
+    expose = {
+        _clearScreen: clearScreen,
+        _displayQuery: displayQuery,
+        _displayResult: displayResult
+    };
+
+    return expose;
+    /* END TEST-HOOK */
+});
