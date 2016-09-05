@@ -47,3 +47,7 @@ The basic idea of this project is to implement a javascript application followin
 * Some books: 
     * [Learning Javascript Design Script Patterns](http://shop.oreilly.com/product/0636920025832.do) by [Addy Osmani](https://twitter.com/addyosmani).
     * [Pro JavaScript Design Patterns](http://link.springer.com/book/10.1007%2F978-1-4302-0496-1) by [Dustin Diaz](http://www.dustindiaz.com/) and Ross Harmes.
+* Dealing with numbers in javascript:
+    * [What Every Computer Scientist Should Know About Floating-Point Arithmetic](docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html)
+    * [Why don’t my numbers add up?](http://floating-point-gui.de/)
+    * [JavaScript Numbers](http://www.w3schools.com/js/js_numbers.asp)

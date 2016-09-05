@@ -6,9 +6,7 @@
 /**
  * The result screen is evaluated.
  */
-define(['jquery', 'calc/pubsub'], function ($, events) {
-    // Cache DOM
-    var $result = $('#result');
+define(['calc/pubsub'], function (events) {
     var MAX_CHARS = 22; //FIXME avoid hard-code
 
     // Bind events
@@ -24,20 +22,18 @@ define(['jquery', 'calc/pubsub'], function ($, events) {
         var result =0;
         try {
             result = eval(query);
-            events.emit('SHOW_RESULT', result);
         } catch(e){
             //TODO Postpone emit and evaluate query to advanced level
-            console.log(e.message);
-            events.emit('SHOW_RESULT', 'INVALID QUERY');
+            //console.log(e.message);
+            result = 'INVALID_QUERY';
         }
+
+        events.emit('SHOW_RESULT', result);
+
         return result;
     }
 
-    /* START TEST-HOOK */
-    expose = {
-        _calculate: calculate
-    };
-
-    return expose;
-    /* END TEST-HOOK */
+    return{
+        calculate: calculate
+    }
 });

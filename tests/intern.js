@@ -47,14 +47,42 @@ define({
     // <https://theintern.github.io/intern/#option-useLoader> for more information.
     loaderOptions: {
         // Packages that should be registered with the loader in each testing environment
-        packages: [ { name: 'myPackage', location: '.' } ]
+        packages: [
+            {
+                name: 'unittest',
+                location: 'tests/unit'
+            },
+            {
+                name: 'jquery',     // jquery module
+                location: 'node_modules/jquery/dist',
+                main: 'jquery'
+            },
+            {
+                name: 'calc',       // application module to test
+                location: 'src/app/js/'
+            }
+        ]
     },
 
     // Unit test suite(s) to run in each browser
-    suites: [ 'tests/unit/hello'/* 'myPackage/tests/foo', 'myPackage/tests/bar' */ ],
+    suites: [
+        'tests/unit/hello',
+        'tests/unit/pubsub',
+        'tests/unit/evaluate',
+        'tests/unit/result'
+        /* 'myPackage/tests/foo', 'myPackage/tests/bar' */ ],
 
     // Functional test suite(s) to execute against each browser once unit tests are completed
     functionalSuites: [ /* 'myPackage/tests/functional' */ ],
+
+    //***************************************************************
+    //* Comment grep option to test the private (TEST-HOOK) members *
+    //***************************************************************
+    // Skip tests matching the pattern
+    grep: [
+        /^(?!private).+/    // skips tests with suit name starting with 'private' (used for testing private members
+                            // exposed using test-hook )
+    ],
 
     // A regular expression matching URLs to files that should not be included in code coverage analysis. Set to `true`
     // to completely disable code coverage.

@@ -1,9 +1,9 @@
 /**
  * Evalaute the query string.
  */
-define(['jquery', 'calc/pubsub'], function ($, events) {
-    // Cache DOM
-    var $query = $('#query');
+define(['calc/pubsub'], function (events) {
+
+    // Max number of characters allowed
     var MAX_CHARS = 22; //FIXME avoid hard-code
 
     // Bind events
@@ -11,14 +11,21 @@ define(['jquery', 'calc/pubsub'], function ($, events) {
 
     /**
      * Evaluate the given key.
-     * @param {char} key - calculator button value
+     * @param {object} data - {key:{char}, query:{string}}
+     * @returns {string} - evaluated query string
      */
-    function evaluate(key) {
-        var query = $query.text()   // get query text
+    function evaluate(data) {
+        var key = data['key'] || '';       // if key is not passed set it to empty
+        var query = data['query'] || '' ;  // if query is not passed set it to empty
+
+        // Trim the leading and trailing spaces
+        query = query.trim();
+        key = key.trim();
 
         switch (key){
             case 'C': // Clear
                 events.emit('CLR_SCR', null);
+                query = ''; // set empty query on emitting CLR_SCR
                 break;
 
             case '=': // Result
@@ -26,9 +33,16 @@ define(['jquery', 'calc/pubsub'], function ($, events) {
                 events.emit('EVAL_RESULT', query);
                 break;
 
+            case '': // Key not passed
+                //console.log("Key not passed");
+                break;
+
             // Operators
             case ')': // break the switch if ')' is not valid
-                if(!isClosingBraceValid(query))
+                if(!isClosingBraceValid(query)) // else continue the following cases
+                    break;
+            case '.':
+                if(!isDecimalValid(query))
                     break;
             case '+':
             case '-':
@@ -36,22 +50,19 @@ define(['jquery', 'calc/pubsub'], function ($, events) {
             case '/':
             case '%':
             case '(':
-                if(isQueryLengthValid(query) && isFirstOperatorValid(query, key)
-                    && isConsecutiveOperatorValid(query, key))
-                    events.emit('EVAL_QUERY', query.concat(key));
-                break;
+                if(!isConsecutiveOperatorValid(query, key) || !isQueryLengthValid(query) ||
+                    !isFirstOperatorValid(query, key))
+                    break;
 
-            // Decimal
-            case '.':
-                if(isQueryLengthValid(query) && isConsecutiveOperatorValid(query, key) && isDecimalValid(query))
-                    events.emit('EVAL_QUERY', query.concat(key));
-                break;
-
-            // Numbers are default
+            // Numbers are default also continue the above cases if not broken
             default:
-                if(isQueryLengthValid(query))
-                    events.emit('EVAL_QUERY', query.concat(key));
+                if(isQueryLengthValid(query)) {
+                    query = query.concat(key);
+                    events.emit('EVAL_QUERY', query);
+                }
         }
+
+        return query;
     }
 
     /**
@@ -59,7 +70,7 @@ define(['jquery', 'calc/pubsub'], function ($, events) {
      * @param {string} query - math query string
      * @returns {string} - evaluated query string
      */
-    function fillTheLeadingBraces(query){
+    function fillTheOpenedBraces(query){
         var opened_brace_count = 0;
         var closed_brace_count = 0;
         try {
@@ -70,10 +81,10 @@ define(['jquery', 'calc/pubsub'], function ($, events) {
                 // Do nothing
                 //console.log(e.message);
             }
-            else {
-                console.log('Unexpected behavior :-X :-( :-[');
-                console.log(e.message)
-            }
+            // else {
+            //     console.log('Unexpected behavior :-X :-( :-[');
+            //     console.log(e.message)
+            // }
         }
         var required_closings = opened_brace_count - closed_brace_count;
 
@@ -91,7 +102,7 @@ define(['jquery', 'calc/pubsub'], function ($, events) {
      * @returns {boolean} - true on valid, false otherwise
      */
     function isAnOperator(key) {
-        if(['+', '-', '*', '/', '%', '(', ')', '.'].indexOf(key) !=-1)
+        if([' ', '+', '-', '*', '/', '%', '(', ')', '.'].indexOf(key) !=-1)
             return true;
         return false;
     }
@@ -111,10 +122,10 @@ define(['jquery', 'calc/pubsub'], function ($, events) {
             if (e instanceof TypeError) {
                 // Do nothing
             }
-            else {
-                console.log('Unexpected behavior :-X :-( :-[');
-                console.log(e.message)
-            }
+            // else {
+            //     console.log('Unexpected behavior :-X :-( :-[');
+            //     console.log(e.message)
+            // }
         }
 
         if (opened_brace_count > closed_brace_count)
@@ -129,9 +140,12 @@ define(['jquery', 'calc/pubsub'], function ($, events) {
      * @returns {boolean} - true on valid, false otherwise
      */
     function isConsecutiveOperatorValid(query, key) {
-        var last_char = query.slice(-1) // Extract last character
+        var last_char = query.slice(-1); // Extract last character
 
-        if(!isAnOperator(last_char))
+        if(last_char == '.' || key.trim() == '') // if no key or query ends with .
+            return false;
+
+        if(!isAnOperator(last_char) && last_char != '')
             return true;
 
         switch (key){
@@ -140,18 +154,16 @@ define(['jquery', 'calc/pubsub'], function ($, events) {
             case '/':
             case '%':
             case ')':
-                if(last_char == ')' || last_char == '.')
+                if(last_char == ')')
                     return true;
                 return false;
 
-            case '-':   // after any operator except '+' and '-' are allowed
-                if(last_char == '-' || last_char == '+')
+            case '-':   // after any operator except '+' are allowed
+                if(last_char == '-')
                     return false;
                 break;
 
             case '.':   // after any operator except '.' are allowed
-                if(last_char == '.')
-                    return false;
                 break;
 
             case '(':   // accepted after any operator
@@ -173,24 +185,24 @@ define(['jquery', 'calc/pubsub'], function ($, events) {
     }
 
     /**
-     * Predicate: Only '-' operator is allowed on the beginning of the query
+     * Predicate: Only '-' or '(' or '.' operator is allowed at the beginning of the query
      * @param {string} query - math query string
      * @param {char} key - calculator button value
      * @returns {boolean} - true on valid, false otherwise
      */
     function isFirstOperatorValid(query, key) {
-        if(query.length != 0 || key == '-' || key == '(')
-            return true
+        if(query.trim() != '' || key == '-' || key == '(' || key == '.')  // If query is not empty just return true
+            return true;
         return false
     }
 
     /**
      * Predicate: Check if the line length is valid.
-     * @param {string} line - math string
+     * @param {string} query - math string
      * @returns {boolean} - true on valid, false otherwise
      */
-    function isQueryLengthValid(line) {
-        if(line.length >= MAX_CHARS)
+    function isQueryLengthValid(query) {
+        if(query.length >= MAX_CHARS)
             return false;
         return true;
     }
@@ -205,9 +217,9 @@ define(['jquery', 'calc/pubsub'], function ($, events) {
         if(isAnOperator(last_char)) { // if last character in query is operator or '.'
             query = query.slice(0, -1); // remove the last character
             return removeIfOperatorsAtEnd(query); // remove recursively as long as the query ends with an operator
-        } else {
-            return query;
         }
+
+        return query;
     }
 
     /**
@@ -225,7 +237,7 @@ define(['jquery', 'calc/pubsub'], function ($, events) {
         query = removeIfOperatorsAtEnd(query);
 
         // Close all opened braces
-        query = fillTheLeadingBraces(query);
+        query = fillTheOpenedBraces(query);
 
         // Emit 'EVAL_QUERY' event to update the query screen
         events.emit('EVAL_QUERY', query);
@@ -237,8 +249,7 @@ define(['jquery', 'calc/pubsub'], function ($, events) {
 
     /* BEGIN TEST-HOOK*/
     expose = {
-        _evaluate: evaluate,
-        _fillTheLeadingBraces: fillTheLeadingBraces,
+        _fillTheOpenedBraces: fillTheOpenedBraces,
         _isAnOperator: isAnOperator,
         _isClosingBraceValid: isClosingBraceValid,
         _isConsecutiveOperatorValid: isConsecutiveOperatorValid,
@@ -248,8 +259,13 @@ define(['jquery', 'calc/pubsub'], function ($, events) {
         _removeIfOperatorsAtEnd: removeIfOperatorsAtEnd,
         _validateIncompleteQuery: validateIncompleteQuery
     }
-
-    return expose;
     /* END TEST-HOOK*/
+
+    return{
+        /* BEGIN TEST-HOOK*/
+        expose: expose,
+        /* BEGIN TEST-HOOK*/
+        evaluate:evaluate
+    }
 
 });

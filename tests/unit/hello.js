@@ -6,7 +6,7 @@
 define(function (require) {
     var registerSuite = require('intern!object');
     var assert = require('intern/chai!assert');
-    var hello = require('src/app/js/hello');
+    var hello = require('calc/hello');
 
     registerSuite({
         name: 'hello',
