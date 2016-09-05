@@ -23,13 +23,15 @@ The basic idea of this project is to implement a javascript application followin
 
 * clone the project
 * run `npm install` from the `simple_calculator` directory to download and install the dependencies.
-* open `simple_calculator/src/index.html` in a browser window
+* open `simple_calculator\src\index.html` in a browser window
 
 ---
 
 **How to test**
 
-* run `npm test` from the `simple_calculator` directory to run the test cases. (**ON PROGRESS:** implementing test cases)
+* run `npm test` from the `simple_calculator` directory to run the test cases. 
+* Apart from the console output, the code coverage results will be stored in  `simple_calculator\tests\reports`.
+* After running the tests, open `simple_calculator\tests\reports\index.html` in a browser window to look at the results.
 
 ---
 
