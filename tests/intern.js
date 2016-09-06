@@ -22,12 +22,12 @@ define({
     // and platformVersion; any other capabilities options specified for an environment will be copied as-is. Note that
     // browser and platform names, and version number formats, may differ between cloud testing systems.
     environments: [
-        { browserName: 'internet explorer', version: '11', platform: 'WIN8' },
-        { browserName: 'internet explorer', version: '10', platform: 'WIN8' },
-        { browserName: 'internet explorer', version: '9', platform: 'WINDOWS' },
-        { browserName: 'firefox', version: '37', platform: [ 'WINDOWS', 'MAC' ] },
-        { browserName: 'chrome', version: '39', platform: [ 'WINDOWS', 'MAC' ] },
-        { browserName: 'safari', version: '8', platform: 'MAC' }
+        // { browserName: 'internet explorer', version: '11', platform: 'WIN8' },
+        // { browserName: 'internet explorer', version: '10', platform: 'WIN8' },
+        // { browserName: 'internet explorer', version: '9', platform: 'WINDOWS' },
+        // { browserName: 'safari', version: '8', platform: 'MAC' },
+        // { browserName: 'firefox', version: '37', platform: [ 'WINDOWS', 'MAC' ]},
+        { browserName: 'chrome', version: '', platform: [ 'WINDOWS', 'LINUX', 'MAC' ] }
     ],
 
     // Maximum number of simultaneous integration tests that should be executed on the remote WebDriver service
@@ -35,11 +35,10 @@ define({
 
     // Name of the tunnel class to use for WebDriver tests.
     // See <https://theintern.github.io/intern/#option-tunnel> for built-in options
-    tunnel: 'BrowserStackTunnel',
-    /*tunnelOptions:{
-      username: 'syamgullipalli1',
-        accessKey: 'Fw6p3fYpTqFCeyWFx18x'
-    },*/
+    tunnel: 'SeleniumTunnel',
+    tunnelOptions: {
+        drivers: [ 'chrome' ]
+    },
 
     // Configuration options for the module loader; any AMD configuration options supported by the AMD loader in use
     // can be used here.
@@ -73,7 +72,7 @@ define({
         /* 'myPackage/tests/foo', 'myPackage/tests/bar' */ ],
 
     // Functional test suite(s) to execute against each browser once unit tests are completed
-    functionalSuites: [ /* 'myPackage/tests/functional' */ ],
+    functionalSuites: [ 'tests/functional/index'/* 'myPackage/tests/functional' */ ],
 
     //***************************************************************
     //* Comment grep option to test the private (TEST-HOOK) members *
