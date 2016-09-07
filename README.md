@@ -9,6 +9,7 @@ The basic idea of this project is to implement a javascript application followin
 * testable
 
 [Publish–subscribe pattern](https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern) is used to make the application loosely coupled. [AMD](https://www.safaribooksonline.com/library/view/learning-javascript-design/9781449334840/ch11s02.html) pattern is followed using [dojo](https://dojotoolkit.org/) for scalable application. Unit and functional tests are written using [Intern](https://theintern.github.io/).
+
 ---
 
 **Requirements**
