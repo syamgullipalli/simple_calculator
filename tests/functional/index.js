@@ -31,7 +31,7 @@ define(function (require) {
             .findById('equals').click().end()
             .findById('query').getVisibleText().then(function (query) {
                 assert.equal(query, '(2+3)*8', 'Entered query should match');
-            });
+            }).end()
             .findById('result').getVisibleText().then(function (result) {
                 assert.equal(result, eval('(2+3)*8'), 'The result of the evaluated query should match');
             });
